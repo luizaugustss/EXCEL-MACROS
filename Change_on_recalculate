@@ -1,0 +1,24 @@
+Private Sub Worksheet_Calculate()
+    If Range("A6").Value <> lastVal Then
+        lastVal = Range("A6").Value
+        Dim n As Integer
+        n = Range("A6").Value
+        Dim listStr As String
+        Dim i As Integer
+        
+        listStr = ""
+        For i = 1 To n
+            If listStr <> "" Then listStr = listStr & ","
+            listStr = listStr & "case " & i
+        Next i
+        
+        With Range("A4").Validation
+            .Delete
+            If n >= 1 And n <= 5 Then
+                .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+                    Operator:=xlBetween, Formula1:=listStr
+            End If
+        End With
+    End If
+End Sub
+
