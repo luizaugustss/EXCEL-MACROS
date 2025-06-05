@@ -1,0 +1,57 @@
+Function addTabela(TableName_1 As String, WsName_1 As String, TableName_2 As String, WsName_2 As String)
+
+    Dim wsFirst As Worksheet
+    Dim wsOther As Worksheet
+    Dim tabela1 As ListObject
+    Dim tabelaOutra As ListObject
+    Dim tabelaIntersectRows As Integer
+    Dim tabelaIntersectcolumns As Integer
+    Dim celFirst As Range
+    Dim celOther As Range
+    Dim i As Long, j As Long
+    Dim colCount As Long, rowCount As Long
+    
+    ' Define a primeira planilha com a tabela1
+    Set wsFirst = ThisWorkbook.Worksheets(WsName_1)
+     
+    ' Verifica se existe uma tabela na primeira planilha
+    On Error Resume Next
+    Set tabela1 = wsFirst.ListObjects(TableName_1)
+    On Error GoTo 0
+    
+    If tabela1 Is Nothing Then
+        MsgBox "Não foi encontrada uma tabela na primeira planilha.", vbExclamation
+        Exit Function
+    End If
+    
+    
+    wsFirst.Range("C1").Value = WsName_1
+    LimpaTabela (tabela1)
+    
+     ' Loop através de cada Worksheets e tabelas
+    For Each wsOther In ThisWorkbook.Worksheets
+        If wsOther.Name = WsName_2 Then
+            Set tabelaOutra = wsOther.ListObjects(TableName_2)
+                    tabelaIntersectRows = tabelaOutra.DataBodyRange.Rows.Count
+                End If
+                If tabela1.DataBodyRange.Columns.Count > tabelaOutra.DataBodyRange.Columns.Count Then
+                    tabelaIntersectcolumns = tabela1.DataBodyRange.Columns.Count
+                Else
+                    tabelaIntersectcolumns = tabelaOutra.DataBodyRange.Columns.Count
+                End If
+                For i = 1 To tabelaIntersectRows
+                    For j = 1 To tabelaIntersectcolumns
+                        tabela1.DataBodyRange.Cells(i, j) = tabelaOutra.DataBodyRange.Cells(i, j)
+                    Next j '
+                Next i
+        End If
+    Next
+End Function
+Function LimpaTabela(Table As ListObject)
+               For i = 1 To Table.DataBodyRange.Rows.Count
+                    For j = 1 To Table.DataBodyRange.Columns.Count
+                        tabela1.DataBodyRange.Cells(i, j) = ""
+                    Next j
+                Next i
+     
+End Function
