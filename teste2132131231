@@ -1,0 +1,49 @@
+' filepath: c:\Users\Luiz\Desktop\Facul\aula_2\CompararDestacar.vba
+Sub CompararEDestacarRepetidos()
+    Dim ws As Worksheet
+    Set ws = ActiveSheet
+
+    Dim rng1 As Range, rng2 As Range, rng3 As Range
+    Dim lastRow1 As Long, lastRow2 As Long, lastRow3 As Long
+    Dim i As Long
+    Dim corLaranja As Long
+    corLaranja = RGB(255, 192, 0)
+
+    ' Defina as colunas das tabelas (A, B, C)
+    lastRow1 = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
+    lastRow2 = ws.Cells(ws.Rows.Count, 2).End(xlUp).Row
+    lastRow3 = ws.Cells(ws.Rows.Count, 3).End(xlUp).Row
+
+    Set rng1 = ws.Range("A1:A" & lastRow1)
+    Set rng2 = ws.Range("B1:B" & lastRow2)
+    Set rng3 = ws.Range("C1:C" & lastRow3)
+
+    ' Destaca duplicados de Tabela 1 em relação às outras
+    For i = 1 To rng1.Rows.Count
+        If Not IsEmpty(rng1.Cells(i, 1)) Then
+            If Not IsError(Application.Match(rng1.Cells(i, 1).Value, rng2, 0)) Or _
+               Not IsError(Application.Match(rng1.Cells(i, 1).Value, rng3, 0)) Then
+                rng1.Cells(i, 1).Interior.Color = corLaranja
+            End If
+        End If
+    Next i
+
+    ' Destaca duplicados de Tabela 2 em relação à Tabela 3
+    For i = 1 To rng2.Rows.Count
+        If Not IsEmpty(rng2.Cells(i, 1)) Then
+            If Not IsError(Application.Match(rng2.Cells(i, 1).Value, rng3, 0)) Then
+                rng2.Cells(i, 1).Interior.Color = corLaranja
+            End If
+        End If
+    Next i
+
+    ' Destaca duplicados de Tabela 3 em relação à Tabela 1 e 2
+    For i = 1 To rng3.Rows.Count
+        If Not IsEmpty(rng3.Cells(i, 1)) Then
+            If Not IsError(Application.Match(rng3.Cells(i, 1).Value, rng1, 0)) Or _
+               Not IsError(Application.Match(rng3.Cells(i, 1).Value, rng2, 0)) Then
+                rng3.Cells(i, 1).Interior.Color = corLaranja
+            End If
+        End If
+    Next i
+End Sub
